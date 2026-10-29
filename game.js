@@ -1,5 +1,8 @@
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import * as THREE from './vendor/three.module.min.js';
+import { GLTFLoader } from './vendor/jsm/loaders/GLTFLoader.js';
+
+// Start fetching the bison right away, in parallel with building the world.
+const bisonRequest = new GLTFLoader().loadAsync('assets/bison.glb');
 
 /* =========================================================
    The Road to Buffalo — a very short 3D game
@@ -22,7 +25,7 @@ const ui = {
 };
 
 // make sure sign textures render in the brand typeface
-try { await Promise.race([document.fonts.load('800 100px "Overpass"'), new Promise(r => setTimeout(r, 2500))]); } catch (e) {}
+const signTextures = [];
 
 /* ---------- renderer ---------- */
 let renderer;
@@ -32,7 +35,7 @@ try {
   ui.fail.hidden = false; ui.loading.hidden = true;
   throw e;
 }
-renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -198,12 +201,14 @@ for (const pts of [main, left, right]) {
 
 /* ---------- sign textures ---------- */
 const FONT = '"Overpass", "Helvetica Neue", Arial, sans-serif';
-function signTexture(lines, { w = 1024, h = 512, bg = '#0b5d3b', fg = '#ffffff', arrow = 0, sizes } = {}) {
-  const c = document.createElement('canvas'); c.width = w; c.height = h;
-  const x = c.getContext('2d');
+function paintSign(c, lines, { bg = '#0b5d3b', fg = '#ffffff', arrow = 0, sizes } = {}) {
+  const w = c.width, h = c.height, x = c.getContext('2d');
+  x.clearRect(0, 0, w, h);
   x.fillStyle = bg; x.fillRect(0, 0, w, h);
-  x.strokeStyle = fg; x.lineWidth = 12; const r = 34;
-  x.beginPath(); x.roundRect(18, 18, w - 36, h - 36, r); x.stroke();
+  x.strokeStyle = fg; x.lineWidth = 12;
+  x.beginPath();
+  if (x.roundRect) x.roundRect(18, 18, w - 36, h - 36, 34); else x.rect(18, 18, w - 36, h - 36);
+  x.stroke();
   x.fillStyle = fg; x.textAlign = 'center'; x.textBaseline = 'middle';
   const n = lines.length;
   lines.forEach((ln, i) => {
@@ -212,12 +217,22 @@ function signTexture(lines, { w = 1024, h = 512, bg = '#0b5d3b', fg = '#ffffff',
     const y = h / 2 + (i - (n - 1) / 2) * size * 1.12 + (arrow ? -40 : 0);
     x.fillText(ln, w / 2, y + size * 0.06, w - 90);
   });
-  if (arrow) { // diagonal arrow
+  if (arrow) {
     x.save(); x.translate(w / 2, h - 92); x.rotate(arrow * Math.PI / 4); x.lineWidth = 18; x.lineCap = 'round';
     x.beginPath(); x.moveTo(0, 40); x.lineTo(0, -40); x.moveTo(-28, -12); x.lineTo(0, -42); x.lineTo(28, -12); x.stroke(); x.restore();
   }
-  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t;
 }
+function signTexture(lines, opts = {}) {
+  const c = document.createElement('canvas'); c.width = opts.w || 1024; c.height = opts.h || 512;
+  paintSign(c, lines, opts);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8;
+  signTextures.push({ t, c, lines, opts });
+  return t;
+}
+// The sign font may arrive after the scene is built: repaint the signs when it does.
+if (document.fonts?.load) document.fonts.load('800 100px "Overpass"').then(() => {
+  signTextures.forEach(s => { paintSign(s.c, s.lines, s.opts); s.t.needsUpdate = true; });
+}).catch(() => {});
 const postMat = new THREE.MeshStandardMaterial({ color: '#8b9096', metalness: 0.6, roughness: 0.4 });
 const backMat = new THREE.MeshStandardMaterial({ color: '#7a7f86', metalness: 0.5, roughness: 0.5 });
 function roadSign(lines, s, u, scale = 1, opts) {
@@ -320,7 +335,7 @@ const dummy = new THREE.Object3D();
 }
 // grass tufts
 {
-  const n = 5200;
+  const n = 3600;
   const im = new THREE.InstancedMesh(new THREE.ConeGeometry(0.28, 1, 4), new THREE.MeshStandardMaterial({ flatShading: true, roughness: 1 }), n);
   const c = new THREE.Color(); let k = 0;
   while (k < n) {
@@ -464,11 +479,46 @@ const bisonPivot = new THREE.Group(); player.add(bisonPivot);
 let mixer, actions = {}, bisonTemplate = null;
 const herd = [];
 
-const loader = new GLTFLoader();
-loader.load('assets/bison.glb', (gltf) => {
+let bisonReady = false;
+function onBisonReady() {
+  if (bisonReady) return; bisonReady = true;
+  clearTimeout(modelTimer);
+  spawnHerd();
+  ui.loading.hidden = true;
+  ui.play.disabled = false;
+}
+
+// Stand-in bison made of simple shapes, used only if the model can't be fetched.
+function fallbackBison() {
+  if (bisonReady) return;
+  const hide = new THREE.MeshStandardMaterial({ color: '#5a3a24', roughness: 1, flatShading: true });
+  const dark = new THREE.MeshStandardMaterial({ color: '#2e1d12', roughness: 1, flatShading: true });
+  const horn = new THREE.MeshStandardMaterial({ color: '#e9dcc0', roughness: 0.6 });
+  const m = new THREE.Group();
+  const add = (geo, mat, x, y, z, sx = 1, sy = 1, sz = 1) => { const o = new THREE.Mesh(geo, mat); o.position.set(x, y, z); o.scale.set(sx, sy, sz); o.castShadow = true; m.add(o); return o; };
+  add(new THREE.BoxGeometry(1.1, 0.9, 1.7), hide, 0, 1.1, 0.2);
+  add(new THREE.BoxGeometry(1.25, 1.15, 1.0), dark, 0, 1.3, -0.65);
+  add(new THREE.BoxGeometry(0.7, 0.7, 0.7), dark, 0, 1.05, -1.3);
+  for (const s of [-1, 1]) add(new THREE.ConeGeometry(0.09, 0.4, 6), horn, s * 0.42, 1.45, -1.3).rotation.z = -s * 0.9;
+  const legs = [];
+  for (const [x, z] of [[-0.35, -0.6], [0.35, -0.6], [-0.35, 0.75], [0.35, 0.75]]) {
+    const pivot = new THREE.Group(); pivot.position.set(x, 0.75, z); m.add(pivot);
+    const leg = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.75, 0.24), dark); leg.position.y = -0.375; leg.castShadow = true; pivot.add(leg); legs.push(pivot);
+  }
+  m.userData.legs = legs;
+  bisonTemplate = { scene: m, anims: [] };
+  bisonPivot.add(m);
+  fallbackLegs = legs;
+  onBisonReady();
+}
+let fallbackLegs = null;
+const modelTimer = setTimeout(fallbackBison, 12000);
+
+bisonRequest.then((gltf) => {
+  if (bisonReady) return;
   const model = gltf.scene;
   model.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; if (o.material.map) o.material.map.anisotropy = 4; } });
-  // orient so the head points down -Z, and scale to ~2.6 units long
+  // orient so the head points down -Z, and scale to about 2.6 units long
   const head = model.getObjectByName('head');
   const box = new THREE.Box3().setFromObject(model), size = box.getSize(new THREE.Vector3());
   let angle = 0;
@@ -482,12 +532,8 @@ loader.load('assets/bison.glb', (gltf) => {
   mixer = new THREE.AnimationMixer(model);
   gltf.animations.forEach(a => { actions[a.name] = mixer.clipAction(a); });
   (actions.walk || Object.values(actions)[0])?.play();
-  spawnHerd();
-  ui.loading.hidden = true;
-  ui.play.disabled = false;
-}, undefined, () => {
-  ui.loading.textContent = 'The buffalo could not be loaded. Refresh to try again.';
-});
+  onBisonReady();
+}).catch(() => fallbackBison());
 
 function spawnHerd() {
   seed = 4242;
@@ -500,8 +546,8 @@ function spawnHerd() {
     g.rotation.y = rr(0, Math.PI * 2);
     const m = new THREE.AnimationMixer(clone);
     const clip = bisonTemplate.anims.find(a => a.name === 'walk') || bisonTemplate.anims[0];
-    const a = m.clipAction(clip); a.play(); a.time = rr(0, clip.duration); a.timeScale = 0.35;
-    scene.add(g); herd.push({ g, m, a, t: rr(0, 6), base: g.rotation.y });
+    if (clip) { const a = m.clipAction(clip); a.play(); a.time = rr(0, clip.duration); a.timeScale = 0.35; }
+    scene.add(g); herd.push({ g, m, t: rr(0, 6), base: g.rotation.y });
   });
 }
 
@@ -803,6 +849,7 @@ function loop() {
     if (state === 'ending' && speed < 3 && actions.run?.isRunning()) { actions.run.fadeOut(0.5); actions.walk?.reset().fadeIn(0.5).play(); }
     mixer.update(dt * (y > 0 ? 0.3 : 1));
   }
+  if (fallbackLegs) { const k = state === 'play' ? speed : (state === 'attract' ? 4 : speed); fallbackLegs.forEach((l, i) => { l.rotation.x = Math.sin(elapsed * k * 0.8 + (i % 2 ? Math.PI : 0) + (i > 1 ? Math.PI / 2 : 0)) * Math.min(k / 20, 0.6); }); }
   for (const h of herd) { h.m.update(dt); h.t += dt; h.g.rotation.y = h.base + Math.sin(h.t * 0.2) * 0.6; }
   updateItems(dt, elapsed);
   updateDust(dt);

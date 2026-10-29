@@ -12,8 +12,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=Overpass:wght@800&display=swap" rel="stylesheet">
+<link rel="modulepreload" href="game.js?v=3">
 <link rel="modulepreload" href="vendor/three.module.min.js">
-<script type="importmap">{"imports":{"three":"./vendor/three.module.min.js","three/addons/":"./vendor/jsm/"}}</script>
+<link rel="modulepreload" href="vendor/jsm/loaders/GLTFLoader.js">
+<link rel="modulepreload" href="vendor/jsm/utils/BufferGeometryUtils.js">
+<link rel="preload" href="assets/bison.glb" as="fetch" type="model/gltf-binary" crossorigin>
 <style>
 :root{
   --night:#07090f; --night-2:#0c1019; --night-3:#121827;
@@ -105,6 +108,8 @@ kbd{font:500 11.5px var(--sans);color:var(--ivory);background:rgba(255,255,255,.
 .loading{font-size:13px;color:var(--dim);margin-top:14px;display:flex;align-items:center;gap:10px}
 .loading::before{content:"";width:12px;height:12px;border-radius:50%;border:2px solid var(--line-2);border-top-color:var(--gold);animation:spin 1s linear infinite}
 .loading[hidden]{display:none}
+.loading.err{color:var(--ember)}
+.loading.err::before{display:none}
 @keyframes spin{to{transform:rotate(360deg)}}
 .scrollcue{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);font-size:12px;color:var(--dim);display:flex;flex-direction:column;align-items:center;gap:10px}
 .scrollcue i{width:1px;height:42px;background:linear-gradient(var(--gold),transparent);animation:cue 2.2s var(--ease) infinite}
@@ -773,7 +778,21 @@ footer a{color:var(--mist)}
 
 <div class="toast" id="toast" role="status"></div>
 
-<script type="module" src="game.js"></script>
+<script type="module" src="game.js?v=3" onerror="window.__gameFail && window.__gameFail()"></script>
+<script>
+// If the field test can't start, say so instead of spinning forever.
+(() => {
+  const loading = document.getElementById('gLoading'), play = document.getElementById('gPlay');
+  window.__gameFail = () => {
+    loading.textContent = "The field test couldn't load. Refresh the page to try again.";
+    loading.classList.add('err');
+    play.textContent = 'Refresh to retry'; play.disabled = false; play.onclick = () => location.reload();
+  };
+  addEventListener('error', (e) => { if (play.disabled && /game\.js|vendor\//.test(e.filename || '')) window.__gameFail(); });
+  setTimeout(() => { if (play.disabled) loading.textContent = 'Still loading the buffalo. This can take a moment on slow connections.'; }, 8000);
+  setTimeout(() => { if (play.disabled) window.__gameFail(); }, 30000);
+})();
+</script>
 <script>
 (() => {
 const $ = (id) => document.getElementById(id);
