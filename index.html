@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI = Buffalo — Institute for Lexical Equivalence</title>
+<meta name="description" content="Working Paper No. 8 from the Institute for Lexical Equivalence: a formal, playable demonstration that AI and buffalo are the same word.">
+<meta name="theme-color" content="#07090f">
+<meta property="og:title" content="AI = Buffalo">
+<meta property="og:description" content="Working Paper No. 8 from the Institute for Lexical Equivalence.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2307090f'/%3E%3Ccircle cx='32' cy='32' r='24' fill='none' stroke='%23d8b878' stroke-width='2'/%3E%3Cpath d='M20 27c-5 0-7-5-4.5-10M44 27c5 0 7-5 4.5-10' stroke='%23d8b878' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Crect x='19' y='25' width='26' height='4' rx='2' fill='%23d8b878'/%3E%3Crect x='19' y='35' width='26' height='4' rx='2' fill='%23d8b878'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=Overpass:wght@800&display=swap" rel="stylesheet">
+<link rel="modulepreload" href="vendor/three.module.min.js">
+<script type="importmap">{"imports":{"three":"./vendor/three.module.min.js","three/addons/":"./vendor/jsm/"}}</script>
+<style>
+:root{
+  --night:#07090f; --night-2:#0c1019; --night-3:#121827;
+  --ivory:#f3eee4; --mist:#a3a7b3; --dim:#6b7080;
+  --gold:#d8b878; --gold-2:#f1d9a4; --gold-deep:#9c7a3c;
+  --ember:#e08a5a; --cognac:#9a5530; --teal:#3aa79a;
+  --line:rgba(243,238,228,.09); --line-2:rgba(243,238,228,.16);
+  --glass:rgba(255,255,255,.035);
+  --serif:'Instrument Serif',Georgia,serif;
+  --sans:'Geist',ui-sans-serif,system-ui,sans-serif;
+  --ease:cubic-bezier(.22,1,.36,1);
+  --grad:linear-gradient(100deg,#f6e2b4 0%,#d8b878 35%,#e08a5a 70%,#c77d9a 100%);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;background:var(--night)}
+body{background:var(--night);color:var(--ivory);font-family:var(--sans);font-size:17px;line-height:1.6;font-weight:400;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--gold);color:var(--night)}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1240px;margin:0 auto;padding:0 32px}
+@media (max-width:600px){.wrap{padding:0 20px}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+.aurora{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.aurora i{position:absolute;border-radius:50%;filter:blur(110px);opacity:.22;animation:drift 26s var(--ease) infinite alternate}
+.aurora i:nth-child(1){width:52vw;height:52vw;left:-14vw;top:30vh;background:#9c7a3c}
+.aurora i:nth-child(2){width:40vw;height:40vw;right:-10vw;top:10vh;background:#7a3b5c;animation-delay:-8s}
+.aurora i:nth-child(3){width:36vw;height:36vw;left:30vw;top:60vh;background:#1f5d58;animation-delay:-15s}
+@keyframes drift{to{transform:translate(8vw,-10vh) scale(1.15)}}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:60;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+main,footer{position:relative;z-index:1}
+
+.gtext{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:500;color:var(--gold);padding:7px 14px 7px 10px;border:1px solid rgba(216,184,120,.28);border-radius:99px;background:rgba(216,184,120,.06)}
+.eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold)}
+h2{font-family:var(--serif);font-weight:400;font-size:clamp(44px,6.4vw,92px);line-height:.95;letter-spacing:-.025em;margin-top:22px}
+h2 em{font-style:italic;color:var(--gold-2)}
+.lead{font-size:clamp(17px,1.5vw,20px);line-height:1.6;color:var(--mist);margin-top:22px;max-width:36em;font-weight:300}
+h3{font-family:var(--sans);font-weight:600;font-size:20px;letter-spacing:-.015em;line-height:1.25}
+
+.rv{opacity:0;transform:translateY(28px);transition:opacity 1.1s var(--ease),transform 1.1s var(--ease);transition-delay:var(--d,0s)}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}.aurora i{animation:none}html{scroll-behavior:auto}}
+
+.btn{--h:52px;display:inline-flex;align-items:center;justify-content:center;gap:10px;height:var(--h);padding:0 26px;border-radius:99px;font:500 15.5px var(--sans);letter-spacing:-.005em;text-decoration:none;cursor:pointer;border:0;transition:transform .35s var(--ease),box-shadow .35s var(--ease),background .35s;white-space:nowrap}
+.btn-gold{background:var(--grad);color:#1a1206;box-shadow:0 10px 40px -10px rgba(224,138,90,.6),inset 0 1px 0 rgba(255,255,255,.5)}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 18px 50px -12px rgba(224,138,90,.75),inset 0 1px 0 rgba(255,255,255,.5)}
+.btn-gold:disabled{opacity:.5;cursor:progress;transform:none}
+.btn-glass{background:rgba(255,255,255,.06);color:var(--ivory);box-shadow:inset 0 0 0 1px var(--line-2);backdrop-filter:blur(14px)}
+.btn-glass:hover{background:rgba(255,255,255,.11)}
+.btn svg{width:16px;height:16px}
+
+.nav{position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:6px;padding:7px 7px 7px 16px;border-radius:99px;background:rgba(12,16,25,.55);backdrop-filter:blur(20px) saturate(1.5);box-shadow:inset 0 0 0 1px var(--line),0 20px 50px -20px rgba(0,0,0,.6);transition:opacity .5s var(--ease),transform .5s var(--ease);width:max-content;max-width:calc(100% - 24px)}
+.nav.hide{opacity:0;transform:translate(-50%,-20px);pointer-events:none}
+.crest{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:10px}
+.crest svg{width:30px;height:30px}
+.crest span{font-family:var(--serif);font-size:19px;letter-spacing:-.01em;white-space:nowrap}
+.nav a.l{font-size:14px;color:var(--mist);text-decoration:none;padding:9px 13px;border-radius:99px;transition:color .3s,background .3s}
+.nav a.l:hover{color:var(--ivory);background:rgba(255,255,255,.05)}
+.nav a.l.on{color:var(--ivory);background:rgba(255,255,255,.07)}
+.nav .btn{--h:40px;padding:0 18px;font-size:14px;margin-left:6px}
+@media (max-width:1060px){.nav a.l{display:none}}
+@media (max-width:480px){.crest span{display:none}}
+
+#game{position:relative;height:100svh;min-height:640px;overflow:hidden;background:#0b0e16;user-select:none;-webkit-user-select:none;z-index:2}
+#gameCanvas{position:absolute;inset:0;width:100%;height:100%;display:block;outline:none}
+.shade{position:absolute;inset:0;pointer-events:none;background:
+  linear-gradient(90deg,rgba(7,9,15,.92) 0%,rgba(7,9,15,.6) 34%,rgba(7,9,15,0) 62%),
+  linear-gradient(0deg,rgba(7,9,15,1) 0%,rgba(7,9,15,0) 26%),
+  linear-gradient(180deg,rgba(7,9,15,.55) 0%,rgba(7,9,15,0) 22%);transition:opacity 1s var(--ease)}
+#game.started .shade{opacity:0}
+.hero-ui{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:110px 0 110px;transition:opacity .8s var(--ease),transform .8s var(--ease)}
+#game.started .hero-ui{opacity:0;transform:scale(.98);pointer-events:none}
+.hero-ui .wrap{width:100%}
+.hero-copy{max-width:640px}
+.hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(84px,13vw,196px);line-height:.82;letter-spacing:-.04em;margin:26px 0 0}
+.hero h1 .ln{display:block;overflow:hidden;padding-bottom:.06em}
+.hero h1 .ln>span{display:inline-block;transform:translateY(105%);animation:rise 1.4s var(--ease) forwards;animation-delay:var(--d)}
+@keyframes rise{to{transform:none}}
+.hero h1 i{font-style:italic}
+.hero .sub{font-size:clamp(17px,1.5vw,20px);color:#c9c6be;font-weight:300;max-width:31em;margin-top:28px;line-height:1.55}
+.hero .ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:38px}
+.fade-up{opacity:0;transform:translateY(16px);animation:fu 1.2s var(--ease) forwards;animation-delay:var(--d)}
+@keyframes fu{to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.hero h1 .ln>span,.fade-up{animation:none;transform:none;opacity:1}}
+.keys{display:flex;gap:18px;flex-wrap:wrap;margin-top:28px;font-size:13px;color:var(--dim)}
+.keys span{display:inline-flex;gap:5px;align-items:center}
+kbd{font:500 11.5px var(--sans);color:var(--ivory);background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 1px var(--line-2);border-radius:6px;padding:3px 7px;min-width:24px;text-align:center}
+.loading{font-size:13px;color:var(--dim);margin-top:14px;display:flex;align-items:center;gap:10px}
+.loading::before{content:"";width:12px;height:12px;border-radius:50%;border:2px solid var(--line-2);border-top-color:var(--gold);animation:spin 1s linear infinite}
+.loading[hidden]{display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.scrollcue{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);font-size:12px;color:var(--dim);display:flex;flex-direction:column;align-items:center;gap:10px}
+.scrollcue i{width:1px;height:42px;background:linear-gradient(var(--gold),transparent);animation:cue 2.2s var(--ease) infinite}
+@keyframes cue{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+@media (max-height:760px){.scrollcue{display:none}}
+
+.hud{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:22px 24px;pointer-events:none}
+.hud[hidden]{display:none}
+.pill{background:rgba(10,13,20,.55);backdrop-filter:blur(16px);box-shadow:inset 0 0 0 1px var(--line-2);border-radius:16px;padding:12px 18px}
+.pill small{display:block;font-size:11.5px;color:var(--mist);font-weight:500}
+.pill b{display:block;font-family:var(--serif);font-weight:400;font-size:34px;line-height:1;letter-spacing:-.01em;font-variant-numeric:tabular-nums;margin-top:2px}
+.pill b.g{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hud-l{display:flex;gap:10px}
+.hud-r{width:min(320px,44vw);display:flex;flex-direction:column;gap:8px}
+.meter{height:5px;background:rgba(255,255,255,.1);border-radius:6px;overflow:hidden;margin:7px 0 10px}
+.meter:last-child{margin-bottom:2px}
+.meter i{display:block;height:100%;width:0;background:var(--grad);border-radius:6px;box-shadow:0 0 12px rgba(216,184,120,.6)}
+.meter.hype i{background:var(--ivory)}
+.hud-btns{display:flex;gap:6px;justify-content:flex-end;pointer-events:auto}
+.mini{font:500 12.5px var(--sans);color:var(--ivory);background:rgba(10,13,20,.55);backdrop-filter:blur(12px);box-shadow:inset 0 0 0 1px var(--line-2);border:0;border-radius:99px;padding:8px 14px;cursor:pointer}
+.mini:hover{background:rgba(255,255,255,.12)}
+.cap{position:absolute;left:50%;bottom:44px;transform:translate(-50%,14px);max-width:min(780px,90%);background:rgba(10,13,20,.62);backdrop-filter:blur(16px);box-shadow:inset 0 0 0 1px var(--line-2);color:var(--ivory);border-radius:18px;padding:16px 24px;font-family:var(--serif);font-size:24px;line-height:1.3;text-align:center;opacity:0;transition:opacity .45s var(--ease),transform .45s var(--ease);pointer-events:none}
+.cap.show{opacity:1;transform:translate(-50%,0)}
+@media (max-width:600px){.cap{font-size:19px}}
+.g-layer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(7,9,15,.35);backdrop-filter:blur(3px)}
+.g-layer[hidden]{display:none}
+.modal{background:rgba(12,16,25,.78);backdrop-filter:blur(24px) saturate(1.4);box-shadow:inset 0 0 0 1px var(--line-2),0 40px 120px -30px rgba(0,0,0,.8);border-radius:28px;padding:44px;max-width:660px;width:100%;animation:pop .6s var(--ease)}
+@keyframes pop{from{opacity:0;transform:translateY(20px) scale(.97)}}
+.modal h2{margin-top:14px;font-size:clamp(44px,6vw,72px)}
+.modal p{color:#c9c6be;font-weight:300;font-size:18px;margin-top:14px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border-radius:16px;overflow:hidden;margin:28px 0}
+.stats div{background:rgba(12,16,25,.9);padding:16px}
+.stats b{display:block;font-family:var(--serif);font-weight:400;font-size:32px;line-height:1;font-variant-numeric:tabular-nums}
+.stats span{display:block;font-size:12px;color:var(--mist);margin-top:6px;line-height:1.3}
+@media (max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}.modal{padding:28px 22px}}
+.modal .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.modal a.tl{font-size:14px;color:var(--mist)}
+.modal a.tl:hover{color:var(--ivory)}
+.touch{position:absolute;bottom:20px;left:0;right:0;display:none;justify-content:space-between;padding:0 18px;pointer-events:none}
+.touch>div{display:flex;gap:10px}
+.touch button{pointer-events:auto;width:64px;height:64px;border-radius:50%;border:0;background:rgba(12,16,25,.6);backdrop-filter:blur(12px);box-shadow:inset 0 0 0 1px var(--line-2);color:var(--ivory);font:600 22px var(--sans);touch-action:none}
+.touch button.down{background:var(--gold);color:var(--night)}
+@media (pointer:coarse){#game.playing .touch{display:flex}#game.playing .cap{bottom:110px}}
+
+.marquee{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:26px 0;overflow:hidden;position:relative;z-index:1;background:var(--night)}
+.marquee .label{position:absolute;left:0;top:0;bottom:0;display:flex;align-items:center;padding:0 60px 0 32px;background:linear-gradient(90deg,var(--night) 60%,transparent);z-index:2;font-size:12.5px;color:var(--dim)}
+.track{display:flex;gap:64px;width:max-content;animation:mq 60s linear infinite}
+.track span{font-family:var(--serif);font-size:26px;color:#8a8d98;white-space:nowrap;font-style:italic}
+@keyframes mq{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.track{animation:none}}
+
+section{padding:150px 0;position:relative}
+@media (max-width:700px){section{padding:100px 0}}
+.head{max-width:860px;margin-bottom:64px}
+
+.manifesto{padding:180px 0}
+.manifesto p{font-family:var(--serif);font-size:clamp(34px,4.6vw,66px);line-height:1.12;letter-spacing:-.015em;max-width:20em}
+.manifesto p span{color:rgba(243,238,228,.14);transition:color .4s}
+.manifesto p span.lit{color:var(--ivory)}
+.manifesto p span.gold.lit{color:var(--gold-2);font-style:italic}
+.manifesto .by{margin-top:44px;display:flex;align-items:center;gap:16px;color:var(--mist);font-size:15px}
+.manifesto .by svg{width:44px;height:44px}
+
+.card{position:relative;background:var(--glass);border-radius:28px;box-shadow:inset 0 0 0 1px var(--line);overflow:hidden;isolation:isolate}
+.card::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(520px circle at var(--mx,50%) var(--my,0%),rgba(216,184,120,.12),transparent 45%);opacity:0;transition:opacity .5s;pointer-events:none}
+.card:hover::before{opacity:1}
+.card::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:radial-gradient(400px circle at var(--mx,50%) var(--my,0%),rgba(241,217,164,.55),transparent 40%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .5s;pointer-events:none}
+.card:hover::after{opacity:1}
+
+.sentence{padding:44px}
+@media (max-width:600px){.sentence{padding:24px}}
+.seg{position:relative;display:inline-flex;padding:5px;border-radius:99px;background:rgba(255,255,255,.04);box-shadow:inset 0 0 0 1px var(--line)}
+.seg .ind{position:absolute;top:5px;bottom:5px;border-radius:99px;background:var(--ivory);transition:left .5s var(--ease),width .5s var(--ease)}
+.seg button{position:relative;z-index:1;font:500 14.5px var(--sans);color:var(--mist);background:none;border:0;padding:11px 20px;border-radius:99px;cursor:pointer;transition:color .4s}
+.seg button[aria-pressed=true]{color:var(--night)}
+.words{display:grid;grid-template-columns:repeat(8,1fr);gap:10px;margin-top:40px}
+@media (max-width:900px){.words{grid-template-columns:repeat(4,1fr)}}
+.word{position:relative;font-family:var(--sans);border:0;border-radius:20px;padding:26px 8px 18px;cursor:pointer;text-align:center;color:var(--ivory);background:rgba(255,255,255,.03);box-shadow:inset 0 0 0 1px var(--line);transition:transform .45s var(--ease),box-shadow .45s var(--ease),background .45s}
+.word b{display:block;font-family:var(--serif);font-weight:400;font-size:clamp(26px,3.2vw,44px);line-height:1;letter-spacing:-.01em;transition:opacity .25s,filter .25s;white-space:nowrap}
+.word b.swap{opacity:0;filter:blur(8px)}
+.word small{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--mist);margin-top:12px}
+.word small::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--c)}
+.word[data-r=adj]{--c:#7fb7e8}
+.word[data-r=noun]{--c:var(--ember)}
+.word[data-r=verb]{--c:var(--gold)}
+.word:hover{transform:translateY(-4px);background:rgba(255,255,255,.06)}
+.word[aria-pressed=true]{box-shadow:inset 0 0 0 1.5px var(--c),0 20px 40px -20px var(--c);background:rgba(255,255,255,.07)}
+.clauses{display:grid;grid-template-columns:repeat(8,1fr);gap:10px;margin-top:14px;font-size:12px;color:var(--dim)}
+.clauses div{border-top:1px solid var(--line-2);padding-top:8px}
+@media (max-width:900px){.clauses{display:none}}
+.readout{display:grid;grid-template-columns:1.2fr 1fr;gap:44px;margin-top:40px;padding-top:32px;border-top:1px solid var(--line)}
+@media (max-width:820px){.readout{grid-template-columns:1fr;gap:24px}}
+.readout h4{font-size:12.5px;font-weight:500;color:var(--gold);margin-bottom:10px}
+.readout .gl{font-family:var(--serif);font-size:clamp(24px,2.4vw,32px);line-height:1.22;letter-spacing:-.01em}
+.readout .dt{font-size:16px;color:var(--mist);font-weight:300}
+.legend{display:flex;gap:20px;font-size:13px;color:var(--mist);margin-top:18px;flex-wrap:wrap}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend i{width:8px;height:8px;border-radius:50%}
+
+.proof{display:grid;grid-template-columns:320px 1fr;gap:28px;align-items:start}
+@media (max-width:960px){.proof{grid-template-columns:1fr}}
+.steps{list-style:none;display:grid;gap:2px;position:sticky;top:110px}
+@media (max-width:960px){.steps{position:static;grid-template-columns:repeat(2,1fr);gap:4px}}
+.steps button{width:100%;text-align:left;font:400 15px var(--sans);color:var(--dim);background:transparent;border:0;border-radius:16px;padding:15px 18px;cursor:pointer;display:flex;gap:14px;align-items:center;transition:color .3s,background .3s}
+.steps .n{font-family:var(--serif);font-size:22px;width:22px;line-height:1}
+.steps button:hover{color:var(--ivory)}
+.steps button.done{color:var(--mist)}
+.steps button[aria-current=step]{background:rgba(255,255,255,.06);color:var(--ivory);box-shadow:inset 0 0 0 1px var(--line-2)}
+.steps button[aria-current=step] .n{color:var(--gold)}
+.sheet{padding:56px 60px 40px;min-height:540px;display:flex;flex-direction:column}
+@media (max-width:600px){.sheet{padding:30px 22px}}
+.sheet .body{animation:sheetIn .7s var(--ease)}
+@keyframes sheetIn{from{opacity:0;transform:translateY(14px)}}
+.sheet .kind{font-size:13px;color:var(--gold)}
+.sheet h3{font-family:var(--serif);font-weight:400;font-size:clamp(40px,4.4vw,60px);letter-spacing:-.02em;line-height:1;margin:10px 0 26px}
+.sheet .stmt{font-family:var(--serif);font-style:italic;font-size:clamp(22px,2vw,27px);line-height:1.35;color:var(--gold-2);padding-left:22px;border-left:1px solid var(--gold-deep);margin-bottom:26px}
+.sheet p{color:var(--mist);font-weight:300;font-size:17.5px;line-height:1.7;max-width:38em;margin-bottom:12px}
+.sheet p i{font-family:var(--serif);font-size:1.1em;color:var(--ivory)}
+.sheet .math{font-family:var(--serif);font-size:21px;line-height:1.6;white-space:pre-wrap;background:rgba(0,0,0,.25);border-radius:18px;padding:22px 26px;margin-top:10px;box-shadow:inset 0 0 0 1px var(--line);color:var(--ivory)}
+.sheet .qed{font-size:44px;margin-top:14px;display:inline-block}
+.sheet .foot{margin-top:auto;padding-top:34px;display:flex;align-items:center;gap:20px}
+.sheet .bar{flex:1;height:2px;background:var(--line);border-radius:2px;overflow:hidden}
+.sheet .bar i{display:block;height:100%;background:var(--grad);transition:width .6s var(--ease)}
+
+.numbers{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.numbers>div{padding:48px 28px 44px;border-right:1px solid var(--line)}
+.numbers>div:last-child{border-right:0}
+@media (max-width:860px){.numbers{grid-template-columns:repeat(2,1fr)}.numbers>div:nth-child(2){border-right:0}.numbers>div:nth-child(-n+2){border-bottom:1px solid var(--line)}}
+.numbers b{display:block;font-family:var(--serif);font-weight:400;font-size:clamp(54px,6vw,88px);line-height:.9;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.numbers span{display:block;font-size:14.5px;color:var(--mist);margin-top:14px;max-width:15em;font-weight:300}
+
+.bento{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.bento .a{grid-column:span 7}.bento .b{grid-column:span 5}.bento .c{grid-column:span 12}
+@media (max-width:960px){.bento .a,.bento .b{grid-column:span 12}}
+.inst{padding:40px}
+@media (max-width:600px){.inst{padding:26px 22px}}
+.inst .tag{font-size:12.5px;color:var(--gold)}
+.inst h3{font-family:var(--serif);font-weight:400;font-size:38px;letter-spacing:-.015em;margin:8px 0 10px}
+.inst>p{color:var(--mist);font-weight:300;font-size:16px;margin-bottom:24px;max-width:32em}
+textarea,input[type=text]{width:100%;font:400 17px var(--sans);color:var(--ivory);background:rgba(0,0,0,.28);border:0;box-shadow:inset 0 0 0 1px var(--line-2);border-radius:16px;padding:16px 18px;resize:vertical;transition:box-shadow .3s}
+textarea:focus,input[type=text]:focus{outline:none;box-shadow:inset 0 0 0 1.5px var(--gold),0 0 0 4px rgba(216,184,120,.12)}
+::placeholder{color:var(--dim)}
+.out{font-family:var(--serif);font-size:24px;line-height:1.35;margin-top:22px;min-height:2.7em}
+.out mark{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;font-style:italic}
+.score{display:flex;justify-content:space-between;align-items:baseline;margin-top:22px;font-size:13.5px;color:var(--mist)}
+.score b{font-family:var(--serif);font-weight:400;font-size:28px;color:var(--ivory)}
+.tr{height:3px;background:var(--line);border-radius:3px;overflow:hidden;margin-top:10px}
+.tr i{display:block;height:100%;width:0;background:var(--grad);transition:width 1.2s var(--ease)}
+.ask{display:flex;gap:10px}
+.ask input{flex:1;min-width:0}
+.ask .btn{--h:56px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.chips button{font:400 13.5px var(--sans);color:var(--mist);background:rgba(255,255,255,.04);box-shadow:inset 0 0 0 1px var(--line);border:0;border-radius:99px;padding:8px 13px;cursor:pointer;transition:all .3s}
+.chips button:hover{color:var(--night);background:var(--gold)}
+.verdict{margin-top:28px;animation:sheetIn .6s var(--ease)}
+.verdict[hidden]{display:none}
+.verdict h4{font-family:var(--serif);font-weight:400;font-size:40px;line-height:1.05;letter-spacing:-.015em}
+.verdict h4 em{font-style:italic}
+.verdict p{color:var(--mist);margin-top:8px;font-weight:300}
+.verdict dl{display:grid;grid-template-columns:1fr auto;margin-top:18px;font-size:14.5px}
+.verdict dt,.verdict dd{padding:11px 0;border-bottom:1px solid var(--line)}
+.verdict dt{color:var(--mist)}
+.verdict dd{text-align:right;font-variant-numeric:tabular-nums}
+.conv{display:grid;grid-template-columns:1fr 1.3fr;gap:56px;align-items:center}
+@media (max-width:960px){.conv{grid-template-columns:1fr;gap:20px}}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;background:transparent;height:34px;margin:6px 0 28px}
+input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:4px;background:linear-gradient(90deg,var(--gold) var(--p,12%),rgba(255,255,255,.12) var(--p,12%))}
+input[type=range]::-moz-range-track{height:4px;border-radius:4px;background:rgba(255,255,255,.12)}
+input[type=range]::-moz-range-progress{height:4px;border-radius:4px;background:var(--gold)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:var(--ivory);margin-top:-11px;box-shadow:0 0 0 6px rgba(216,184,120,.25),0 6px 16px rgba(0,0,0,.5)}
+input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:var(--ivory);border:0;box-shadow:0 0 0 6px rgba(216,184,120,.25)}
+.readings{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.readings div{border-top:1px solid var(--line-2);padding-top:14px}
+.readings b{display:block;font-family:var(--serif);font-weight:400;font-size:clamp(40px,4vw,54px);line-height:1;font-variant-numeric:tabular-nums}
+.readings span{font-size:13px;color:var(--mist)}
+.msg{font-family:var(--serif);font-style:italic;font-size:24px;color:var(--gold-2);margin-top:24px}
+
+.figure{padding:40px}
+@media (max-width:600px){.figure{padding:24px 18px}}
+.figure header{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;margin-bottom:20px}
+.figure header p{font-size:14px;color:var(--mist);margin-top:4px}
+.rbadge{font-family:var(--serif);font-size:34px;line-height:1;text-align:right}
+.rbadge small{display:block;font-family:var(--sans);font-size:12px;color:var(--mist);margin-top:6px}
+canvas#chart{width:100%;height:400px;display:block}
+.figure figcaption{font-size:14px;color:var(--dim);margin-top:18px;max-width:58em}
+.tip{position:absolute;pointer-events:none;background:rgba(12,16,25,.92);backdrop-filter:blur(10px);box-shadow:inset 0 0 0 1px var(--line-2);color:var(--ivory);font-size:13px;padding:10px 14px;border-radius:12px;opacity:0;transition:opacity .15s;white-space:nowrap;font-variant-numeric:tabular-nums;z-index:3}
+.tip b{font-family:var(--serif);font-weight:400;font-size:20px;display:block}
+
+.reels{display:grid;grid-template-columns:1.5fr 1fr;grid-template-rows:1fr 1fr;gap:16px;min-height:580px}
+@media (max-width:900px){.reels{grid-template-columns:1fr;grid-template-rows:none;min-height:0}}
+.reel{display:flex;flex-direction:column;justify-content:flex-end;text-decoration:none;color:var(--ivory);padding:36px;min-height:260px;transition:transform .6s var(--ease)}
+.reel:hover{transform:translateY(-4px)}
+.reel.big{grid-row:span 2}
+.reel .art{position:absolute;inset:0;z-index:-2;transition:transform 1.2s var(--ease)}
+.reel:hover .art{transform:scale(1.05)}
+.reel .art::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(7,9,15,.95) 0%,rgba(7,9,15,.15) 70%)}
+.reel.big .art{background:radial-gradient(120% 90% at 75% 15%,#f1d9a4 0%,#d8b878 12%,#9a5530 34%,#3a1d16 62%,#0c1019 100%)}
+.reel.r2 .art{background:radial-gradient(110% 120% at 85% 0%,#8a5a34,#1a1310 70%)}
+.reel.r3 .art{background:radial-gradient(110% 120% at 85% 0%,#3d4f96,#0f1222 70%)}
+.reel .play{position:absolute;top:30px;right:30px;width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.12);backdrop-filter:blur(10px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.3);display:grid;place-items:center;transition:transform .6s var(--ease),background .4s}
+.reel:hover .play{transform:scale(1.1);background:var(--ivory)}
+.reel .play svg{width:20px;height:20px;margin-left:4px;fill:var(--ivory);transition:fill .4s}
+.reel:hover .play svg{fill:var(--night)}
+.reel h3{font-family:var(--serif);font-weight:400;font-size:40px;letter-spacing:-.015em;line-height:1}
+.reel.big h3{font-size:clamp(52px,5.4vw,84px)}
+.reel p{color:#c9c6be;font-weight:300;margin-top:12px;max-width:28em;font-size:16px}
+.reel .src{font-size:12.5px;color:var(--gold-2);margin-bottom:12px}
+.horns{position:absolute;right:-60px;top:-30px;width:60%;opacity:.2;z-index:-1}
+
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:28px}
+.filters button{font:400 14px var(--sans);border:0;background:rgba(255,255,255,.04);box-shadow:inset 0 0 0 1px var(--line);color:var(--mist);border-radius:99px;padding:10px 17px;cursor:pointer;transition:all .3s}
+.filters button[aria-pressed=true]{background:var(--ivory);color:var(--night);box-shadow:none}
+.papers{border-top:1px solid var(--line)}
+.paper{border-bottom:1px solid var(--line);padding:32px 0;display:grid;grid-template-columns:110px 1fr auto;gap:32px;align-items:start}
+@media (max-width:760px){.paper{grid-template-columns:1fr;gap:10px}}
+.paper .yr{font-family:var(--serif);font-size:36px;line-height:1;color:var(--dim);transition:color .4s}
+.paper:hover .yr{color:var(--gold)}
+.paper h4{font-family:var(--serif);font-weight:400;font-size:clamp(24px,2.2vw,30px);line-height:1.15;letter-spacing:-.01em;max-width:30em}
+.paper .by{font-size:14.5px;color:var(--mist);margin-top:10px;font-weight:300}
+.paper .by i{color:var(--ivory);font-style:normal}
+.paper .award{display:inline-block;font-family:var(--sans);font-size:11.5px;color:var(--night);background:var(--grad);border-radius:99px;padding:3px 10px;margin-left:10px;vertical-align:6px}
+.paper .abs{display:grid;grid-template-rows:0fr;transition:grid-template-rows .6s var(--ease)}
+.paper .abs>div{overflow:hidden}
+.paper.open .abs{grid-template-rows:1fr}
+.paper .abs p{color:#c9c6be;font-weight:300;font-size:16.5px;line-height:1.7;padding-top:18px;max-width:42em}
+.paper .abs .kw{font-size:13px;color:var(--dim);margin-top:10px}
+.paper .acts{display:flex;gap:6px}
+.paper .acts button{font:400 13.5px var(--sans);color:var(--ivory);background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px var(--line);border:0;border-radius:99px;padding:9px 14px;cursor:pointer;white-space:nowrap;transition:background .3s}
+.paper .acts button:hover{background:rgba(255,255,255,.12)}
+.paper .cites{font-size:13px;color:var(--dim);margin-top:12px;text-align:right}
+@media (max-width:760px){.paper .cites{text-align:left}}
+
+.obj{max-width:920px}
+.obj details{border-bottom:1px solid var(--line)}
+.obj details:first-child{border-top:1px solid var(--line)}
+.obj summary{list-style:none;cursor:pointer;padding:30px 0;font-family:var(--serif);font-size:clamp(24px,2.4vw,32px);line-height:1.2;letter-spacing:-.01em;display:flex;justify-content:space-between;gap:24px;align-items:center}
+.obj summary::-webkit-details-marker{display:none}
+.obj .pm{width:40px;height:40px;border-radius:50%;box-shadow:inset 0 0 0 1px var(--line-2);flex-shrink:0;position:relative;transition:transform .5s var(--ease),background .4s}
+.obj .pm::before,.obj .pm::after{content:"";position:absolute;left:50%;top:50%;width:14px;height:1.5px;background:var(--ivory);transform:translate(-50%,-50%)}
+.obj .pm::after{transform:translate(-50%,-50%) rotate(90deg)}
+.obj details[open] .pm{transform:rotate(45deg);background:var(--gold)}
+.obj details[open] .pm::before,.obj details[open] .pm::after{background:var(--night)}
+.obj p{color:var(--mist);font-weight:300;font-size:17.5px;line-height:1.7;padding:0 0 30px;max-width:40em}
+
+.inst-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media (max-width:960px){.inst-grid{grid-template-columns:1fr}}
+.seal{padding:64px 48px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:600px;background:radial-gradient(80% 70% at 50% 40%,rgba(216,184,120,.13),transparent 70%),var(--glass)}
+.seal svg.big{width:min(320px,74%);height:auto;filter:drop-shadow(0 20px 60px rgba(216,184,120,.25))}
+.seal .nm{font-family:var(--serif);font-size:clamp(34px,3.4vw,46px);line-height:1;margin-top:34px;letter-spacing:-.01em}
+.seal .mt{font-family:var(--serif);font-style:italic;font-size:22px;color:var(--gold-2);margin-top:12px}
+.about{padding:52px 48px}
+@media (max-width:600px){.about,.seal{padding:32px 22px}}
+.about p{color:var(--mist);font-weight:300;font-size:17.5px;line-height:1.7;margin-top:18px;max-width:34em}
+.about h2{font-size:clamp(40px,4.4vw,62px)}
+.depts{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border-radius:18px;overflow:hidden;margin-top:34px}
+.depts div{background:var(--night-2);padding:20px 22px}
+.depts b{display:block;font-weight:500;font-size:15.5px}
+.depts span{font-size:13.5px;color:var(--dim)}
+.palette{display:flex;gap:8px;margin-top:22px;flex-wrap:wrap}
+.palette span{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--mist);padding:6px 12px 6px 6px;border-radius:99px;box-shadow:inset 0 0 0 1px var(--line)}
+.palette i{width:18px;height:18px;border-radius:50%}
+
+.refs{columns:2;column-gap:64px;counter-reset:r;font-size:15px;line-height:1.6;color:var(--mist);list-style:none;font-weight:300}
+@media (max-width:820px){.refs{columns:1}}
+.refs li{break-inside:avoid;margin-bottom:18px;padding-left:40px;position:relative}
+.refs li::before{counter-increment:r;content:counter(r,decimal-leading-zero);position:absolute;left:0;top:-2px;font-family:var(--serif);font-size:20px;color:var(--gold)}
+.refs i{color:var(--ivory);font-family:var(--serif);font-size:1.08em}
+.refs a{color:var(--gold-2)}
+.refs .tag{font-size:11px;border-radius:99px;padding:2px 8px;margin-left:8px;vertical-align:1px;white-space:nowrap}
+.refs .real{background:rgba(58,167,154,.18);color:#8fded3}
+.refs .fict{background:rgba(255,255,255,.06);color:var(--dim)}
+
+.finale{text-align:center;padding:200px 0 180px;overflow:hidden}
+.finale h2{font-size:clamp(90px,17vw,260px);line-height:.82;letter-spacing:-.045em;margin:24px 0 0}
+.finale p{color:var(--mist);font-weight:300;font-size:clamp(17px,1.5vw,20px);max-width:32em;margin:36px auto 44px}
+.finale .row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.finale::before{content:"";position:absolute;left:50%;top:45%;width:70vw;height:40vw;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(224,138,90,.22),transparent);filter:blur(30px);z-index:-1}
+
+footer{border-top:1px solid var(--line);padding:64px 0 54px;color:var(--dim);font-size:14px;font-weight:300}
+footer .wrap{display:grid;grid-template-columns:1fr 1.5fr;gap:48px}
+@media (max-width:820px){footer .wrap{grid-template-columns:1fr}}
+footer .crest span{color:var(--ivory)}
+footer p{max-width:46em;line-height:1.7}
+footer p+p{margin-top:10px}
+footer a{color:var(--mist)}
+.toast{position:fixed;bottom:28px;left:50%;transform:translate(-50%,100px);background:rgba(12,16,25,.92);backdrop-filter:blur(16px);box-shadow:inset 0 0 0 1px var(--line-2),0 20px 50px -10px rgba(0,0,0,.6);color:var(--ivory);font-size:14.5px;padding:14px 20px;border-radius:99px;transition:transform .5s var(--ease);z-index:99;visibility:hidden;display:flex;gap:10px;align-items:center}
+.toast::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--teal);box-shadow:0 0 10px var(--teal)}
+.toast.show{transform:translate(-50%,0);visibility:visible}
+</style>
+</head>
+<body>
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+<div class="grain" aria-hidden="true"></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6e2b4"/><stop offset=".55" stop-color="#d8b878"/><stop offset="1" stop-color="#b8834a"/></linearGradient>
+    <path id="arcTop" d="M 50 160 A 110 110 0 0 1 270 160"/>
+    <path id="arcBot" d="M 38 160 A 122 122 0 0 0 282 160"/>
+  </defs>
+  <symbol id="crest" viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="30" fill="none" stroke="url(#gg)" stroke-width="1.6"/>
+    <circle cx="32" cy="32" r="25.5" fill="none" stroke="url(#gg)" stroke-width=".8" opacity=".6"/>
+    <path d="M20 27c-5 0-7-5-4.5-10M44 27c5 0 7-5 4.5-10" stroke="url(#gg)" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+    <rect x="19" y="25" width="26" height="4" rx="2" fill="url(#gg)"/>
+    <rect x="19" y="35" width="26" height="4" rx="2" fill="url(#gg)"/>
+  </symbol>
+  <symbol id="seal" viewBox="0 0 320 320">
+    <circle cx="160" cy="160" r="152" fill="none" stroke="url(#gg)" stroke-width="2"/>
+    <circle cx="160" cy="160" r="142" fill="none" stroke="url(#gg)" stroke-width=".8" opacity=".55"/>
+    <circle cx="160" cy="160" r="86" fill="none" stroke="url(#gg)" stroke-width="1.2" opacity=".8"/>
+    <text font-family="Geist, sans-serif" font-size="14" letter-spacing="5" fill="#d8b878"><textPath href="#arcTop" startOffset="50%" text-anchor="middle">INSTITUTE FOR LEXICAL</textPath></text>
+    <text font-family="Geist, sans-serif" font-size="14" letter-spacing="5" fill="#d8b878"><textPath href="#arcBot" startOffset="50%" text-anchor="middle">EQUIVALENCE · MCMLXXII</textPath></text>
+    <path d="M120 150c-14 0-20-14-12-28M200 150c14 0 20-14 12-28" stroke="url(#gg)" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <rect x="117" y="143" width="86" height="12" rx="6" fill="url(#gg)"/>
+    <rect x="117" y="170" width="86" height="12" rx="6" fill="url(#gg)"/>
+    <circle cx="36" cy="160" r="3" fill="#d8b878"/><circle cx="284" cy="160" r="3" fill="#d8b878"/>
+  </symbol>
+</svg>
+
+<nav class="nav" id="nav" aria-label="Main">
+  <a class="crest" href="#top" aria-label="Institute for Lexical Equivalence"><svg aria-hidden="true"><use href="#crest"/></svg><span>Lexical Equivalence</span></a>
+  <a class="l" href="#sentence">Sentence</a>
+  <a class="l" href="#proof">Proof</a>
+  <a class="l" href="#lab">Lab</a>
+  <a class="l" href="#data">Data</a>
+  <a class="l" href="#footage">Footage</a>
+  <a class="l" href="#literature">Literature</a>
+  <a class="l" href="#institute">Institute</a>
+  <a class="btn btn-gold" href="#top" id="navPlay">Play</a>
+</nav>
+
+<main id="top">
+
+<div id="game" class="hero" aria-label="AI equals Buffalo. Interactive 3D field test.">
+  <canvas id="gameCanvas" tabindex="-1" aria-label="3D view of a bison on a prairie road"></canvas>
+  <div class="shade"></div>
+
+  <div class="hero-ui" id="gIntro">
+    <div class="wrap">
+      <div class="hero-copy">
+        <span class="eyebrow fade-up" style="--d:.1s">Working Paper No. 8</span>
+        <h1><span class="ln"><span style="--d:.15s">AI <i class="gtext">=</i></span></span><span class="ln"><span style="--d:.3s">Buffalo</span></span></h1>
+        <p class="sub fade-up" style="--d:.7s">A formal proof from the Institute for Lexical Equivalence that the two most overused words in English are the same word. It begins with a field test.</p>
+        <div class="ctas fade-up" style="--d:.85s">
+          <button class="btn btn-gold" id="gPlay" disabled><svg viewBox="0 0 16 16" fill="currentColor"><path d="M3 1.8v12.4L14 8z"/></svg>Play the field test</button>
+          <a class="btn btn-glass" href="#manifesto">Read the paper</a>
+        </div>
+        <div class="keys fade-up" style="--d:1s" aria-label="Controls">
+          <span><kbd>W</kbd><kbd>S</kbd> Speed</span><span><kbd>A</kbd><kbd>D</kbd> Steer</span><span><kbd>Space</kbd> Jump</span><span><kbd>Shift</kbd> Sprint</span><span><kbd>Esc</kbd> Pause</span>
+        </div>
+        <p class="loading" id="gLoading">Loading the buffalo</p>
+      </div>
+    </div>
+    <div class="scrollcue" aria-hidden="true">Scroll<i></i></div>
+  </div>
+
+  <div class="hud" id="gHud" hidden>
+    <div class="hud-l">
+      <div class="pill"><small>Valuation</small><b class="g" id="gVal">$0.0B</b></div>
+      <div class="pill"><small>AI collected</small><b id="gAi">0</b></div>
+    </div>
+    <div class="hud-r">
+      <div class="pill">
+        <small>Distance to the fork</small><div class="meter"><i id="gProg"></i></div>
+        <small>Hype (hold Shift)</small><div class="meter hype"><i id="gHype"></i></div>
+      </div>
+      <div class="hud-btns"><button class="mini" id="gMute" aria-pressed="true">Sound on</button><button class="mini" id="gExit">Exit</button></div>
+    </div>
+  </div>
+
+  <div class="cap" id="gCap" role="status" aria-live="polite"></div>
+
+  <div class="g-layer" id="gPause" hidden>
+    <div class="modal" style="max-width:440px;text-align:center">
+      <span class="eyebrow">Paused</span>
+      <h2>The buffalo waits.</h2>
+      <p>So do the investors.</p>
+      <div class="row" style="justify-content:center;margin-top:26px"><button class="btn btn-gold" id="gResume">Resume</button></div>
+    </div>
+  </div>
+
+  <div class="g-layer" id="gEnd" hidden>
+    <div class="modal">
+      <span class="eyebrow">Field test complete</span>
+      <h2 id="gEndTitle"></h2>
+      <p id="gEndBody"></p>
+      <div class="stats" id="gEndStats"></div>
+      <div class="row">
+        <button class="btn btn-gold" id="gAgain">Play again</button>
+        <a class="btn btn-glass" id="gYtChoice" target="_blank" rel="noopener"></a>
+        <button class="btn btn-glass" id="gExitEnd">Read the proof</button>
+      </div>
+      <div class="row" style="margin-top:16px"><a class="tl" id="gYtOther" target="_blank" rel="noopener"></a></div>
+    </div>
+  </div>
+
+  <div class="g-layer" id="gFail" hidden>
+    <div class="modal"><h2 style="font-size:44px">3D isn't available here.</h2><p>Your browser couldn't start 3D graphics, so the field test can't run. Everything below still works.</p></div>
+  </div>
+
+  <div class="touch" id="gTouch">
+    <div><button data-k="left" aria-label="Steer left">◀</button><button data-k="right" aria-label="Steer right">▶</button></div>
+    <div><button data-k="boost" aria-label="Sprint">»</button><button data-k="jump" aria-label="Jump">⤒</button></div>
+  </div>
+</div>
+
+<div class="marquee" aria-label="Cited in">
+  <div class="label">Cited in</div>
+  <div class="track" aria-hidden="true" id="track"></div>
+</div>
+
+<section class="manifesto" id="manifesto">
+  <div class="wrap">
+    <span class="eyebrow">Abstract</span>
+    <p id="mani" style="margin-top:34px">We call everything AI. The toothbrush, the spreadsheet, the rice cooker, the if-statement. A word that names everything names nothing in particular, which leaves it exactly one peer in the English language: <span class="gold">buffalo.</span></p>
+    <div class="by"><svg aria-hidden="true"><use href="#crest"/></svg><span>Department of Applied Equivalence. Peer reviewed and unrefuted.</span></div>
+  </div>
+</section>
+
+<section id="sentence">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="eyebrow">Primary evidence</span>
+      <h2>One word. Every job. <em>Still a sentence.</em></h2>
+      <p class="lead">In 1972 the linguist William J. Rapaport showed that <i>Buffalo buffalo Buffalo buffalo buffalo buffalo Buffalo buffalo</i> is grammatical English. Each word is a place, an animal, or an action. Switch to AI, and every word keeps its job.</p>
+    </div>
+    <div class="card sentence rv">
+      <div class="seg" id="seg" role="group" aria-label="Sentence version">
+        <span class="ind" id="segInd"></span>
+        <button data-m="buffalo" aria-pressed="true">Buffalo</button>
+        <button data-m="ai" aria-pressed="false">AI</button>
+        <button data-m="plain" aria-pressed="false">Plain English</button>
+      </div>
+      <div class="words" id="words"></div>
+      <div class="clauses" aria-hidden="true">
+        <div style="grid-column:1/3">Subject</div><div style="grid-column:3/6">Relative clause</div><div style="grid-column:6/7">Main verb</div><div style="grid-column:7/9">Object</div>
+      </div>
+      <div class="legend"><span><i style="background:#7fb7e8"></i>Proper adjective</span><span><i style="background:var(--ember)"></i>Noun</span><span><i style="background:var(--gold)"></i>Verb</span></div>
+      <div class="readout">
+        <div><h4>How it reads</h4><p class="gl" id="gloss"></p></div>
+        <div><h4>Selected word</h4><p class="dt" id="wordDetail"></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="proof" style="padding-top:40px">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="eyebrow">Formal derivation</span>
+      <h2>The proof, in <em>six steps.</em></h2>
+      <p class="lead">Each step follows from the last. To reject the conclusion, you have to name the step you reject. Reviewers have been trying since 2019.</p>
+    </div>
+    <div class="proof rv">
+      <ol class="steps" id="steps"></ol>
+      <article class="card sheet" aria-live="polite">
+        <div class="body" id="sheetBody"></div>
+        <div class="foot">
+          <button class="btn btn-glass" id="prev">Back</button>
+          <div class="bar"><i id="bar"></i></div>
+          <button class="btn btn-gold" id="next">Next step</button>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<div class="wrap rv">
+  <div class="numbers">
+    <div><b data-to="11400">0</b><span>Sentences tested across eleven survey waves</span></div>
+    <div><b data-to="0">0</b><span>Sentences where the swap changed the meaning</span></div>
+    <div><b data-to="94" data-suf="%">0</b><span>Couldn't define "AI" without saying "AI"</span></div>
+    <div><b data-to="47">0</b><span>Independent studies, one conclusion</span></div>
+  </div>
+</div>
+
+<section id="lab">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="eyebrow">Reproducibility lab</span>
+      <h2>Run the experiment <em>yourself.</em></h2>
+      <p class="lead">A theory should hold up whatever you feed it. These are the Institute's own instruments.</p>
+    </div>
+    <div class="bento">
+      <div class="card inst a rv">
+        <span class="tag">Instrument A</span>
+        <h3>Substitution engine</h3>
+        <p>Write any sentence about AI. The engine swaps in "buffalo" and measures what meaning is lost.</p>
+        <label class="sr" for="subIn">Sentence to test</label>
+        <textarea id="subIn" rows="2">Our new AI-powered platform uses AI to help AI teams build better AI.</textarea>
+        <div class="out" id="subOut"></div>
+        <div class="score"><span>Meaning retained</span><b id="sri">100%</b></div>
+        <div class="tr"><i id="sriBar"></i></div>
+      </div>
+      <div class="card inst b rv" style="--d:.1s">
+        <span class="tag">Instrument B</span>
+        <h3>Is it AI?</h3>
+        <p>Name any object, product, or idea, and we'll check it against current marketing.</p>
+        <div class="ask">
+          <label class="sr" for="aiIn">Thing to classify</label>
+          <input type="text" id="aiIn" placeholder="A toaster">
+          <button class="btn btn-gold" id="aiGo">Classify</button>
+        </div>
+        <div class="chips" id="chips"></div>
+        <div class="verdict" id="verdict" hidden aria-live="polite"><h4 id="vTitle"></h4><p id="vSub"></p><dl id="vList"></dl></div>
+      </div>
+      <div class="card inst c rv">
+        <div class="conv">
+          <div>
+            <span class="tag">Instrument C</span>
+            <h3>Convergence</h3>
+            <p style="color:var(--mist);font-weight:300">Set the share of things currently labeled "AI." As it nears 100%, the label stops telling anything apart, and the word becomes buffalo.</p>
+          </div>
+          <div>
+            <label class="sr" for="conv">Share of things called AI</label>
+            <input type="range" id="conv" min="0" max="100" value="12">
+            <div class="readings">
+              <div><b id="cShare">12%</b><span>Called "AI"</span></div>
+              <div><b id="cBits">3.06</b><span>Bits of meaning left</span></div>
+              <div><b id="cBuf">0.03</b><span>Buffalo equivalence</span></div>
+            </div>
+            <p class="msg" id="cMsg"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="data" style="padding-top:40px">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="eyebrow">Empirical correlation</span>
+      <h2>The two words <em>move together.</em></h2>
+      <p class="lead">If two words are interchangeable, their usage should track. We indexed "AI" in product launches against the semantic load of "buffalo," both set to 100 in 2015.</p>
+    </div>
+    <figure class="card figure rv">
+      <header>
+        <div><h3>Lexical co-movement, 2015 to 2026</h3><p>Indexed frequency, log scale. Hover to inspect a year.</p></div>
+        <div class="rbadge"><span class="gtext">r = 0.9974</span><small>Pearson correlation</small></div>
+      </header>
+      <canvas id="chart" role="img" aria-label="Line chart: AI and buffalo usage rise together from 100 in 2015 to about 2,250 in 2026."></canvas>
+      <div class="tip" id="tip"></div>
+      <div class="legend"><span><i style="background:var(--gold)"></i>"AI" in product launches</span><span><i style="background:var(--ember)"></i>"Buffalo" semantic load</span></div>
+      <figcaption>Source: Thornbury and Okafor (2025), Bisonometric Panel Survey, waves 1 to 11. The dashed line marks projected convergence, where the two series can no longer be told apart.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="footage">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="eyebrow">Field footage</span>
+      <h2>Observed <em>in the wild.</em></h2>
+      <p class="lead">From the Institute's archive: the best-known recording of a man and a buffalo in full equivalence, plus live YouTube searches so you can compare the two bodies of evidence yourself.</p>
+    </div>
+    <div class="reels">
+      <a class="card reel big rv" href="https://www.youtube.com/results?search_query=guy+on+a+buffalo+possum+posse" target="_blank" rel="noopener">
+        <span class="art"></span>
+        <svg class="horns" viewBox="0 0 64 64" aria-hidden="true"><use href="#crest"/></svg>
+        <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5v17L18 10z"/></svg></span>
+        <span class="src">The Possum Posse, from Buffalo Rider (1978)</span>
+        <h3>Guy on a Buffalo</h3>
+        <p>The four-part series that settled the question early. A man rides a buffalo past bears, babies, and cougars. The buffalo handles the rest.</p>
+      </a>
+      <a class="card reel r2 rv" style="--d:.1s" href="https://www.youtube.com/results?search_query=buffalo" target="_blank" rel="noopener">
+        <span class="art"></span>
+        <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5v17L18 10z"/></svg></span>
+        <span class="src">Search YouTube</span>
+        <h3>Buffalo</h3>
+        <p>Live results for the animal, the city, and the verb.</p>
+      </a>
+      <a class="card reel r3 rv" style="--d:.2s" href="https://www.youtube.com/results?search_query=AI" target="_blank" rel="noopener">
+        <span class="art"></span>
+        <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5v17L18 10z"/></svg></span>
+        <span class="src">Search YouTube</span>
+        <h3>AI</h3>
+        <p>Live results for the other one. Note the similarities.</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="literature" style="padding-top:40px">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="eyebrow">Prior literature</span>
+      <h2>A growing <em>body of evidence.</em></h2>
+      <p class="lead">Examined from linguistic, computational, and economic angles. Open any paper to read its abstract.</p>
+    </div>
+    <div class="filters rv" id="filters" role="group" aria-label="Filter by field"></div>
+    <div class="papers rv" id="papers"></div>
+  </div>
+</section>
+
+<section id="objections" style="padding-top:20px">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="eyebrow">Objections and replies</span>
+      <h2>Every objection, <em>answered.</em></h2>
+    </div>
+    <div class="obj rv" id="obj"></div>
+  </div>
+</section>
+
+<section id="institute" style="padding-top:40px">
+  <div class="wrap inst-grid">
+    <div class="card seal rv">
+      <svg class="big" viewBox="0 0 320 320" role="img" aria-label="Seal of the Institute for Lexical Equivalence"><use href="#seal"/></svg>
+      <div class="nm">Institute for Lexical Equivalence</div>
+      <div class="mt">Verba aequalia. Words, made equal.</div>
+    </div>
+    <div class="card about rv" style="--d:.1s">
+      <span class="eyebrow">The Institute</span>
+      <h2>We find the words that <em>mean the same thing.</em></h2>
+      <p>The Institute for Lexical Equivalence studies words that have stopped meaning anything in particular. It was founded in Buffalo, New York, in 1972, the year a single word first filled an entire sentence.</p>
+      <p>Its seal is an equals sign with horns. The upper bar is the word as written and the lower bar is the word as used. They are the same length on purpose.</p>
+      <div class="depts">
+        <div><b>Bovine Linguistics</b><span>Syntax and polysemy</span></div>
+        <div><b>Hype Economics</b><span>Label inflation</span></div>
+        <div><b>Ruminant Computation</b><span>Models and herds</span></div>
+        <div><b>Applied Equivalence</b><span>Field testing</span></div>
+      </div>
+      <div class="palette" aria-label="Institute colors">
+        <span><i style="background:var(--night);box-shadow:inset 0 0 0 1px var(--line-2)"></i>Night</span>
+        <span><i style="background:var(--gold)"></i>Champagne</span>
+        <span><i style="background:var(--ember)"></i>Ember</span>
+        <span><i style="background:var(--cognac)"></i>Cognac</span>
+        <span><i style="background:var(--ivory)"></i>Ivory</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="references" style="padding-top:40px">
+  <div class="wrap">
+    <div class="head rv"><span class="eyebrow">References</span><h2>Works <em>cited.</em></h2></div>
+    <ol class="refs rv" id="refs"></ol>
+  </div>
+</section>
+
+<section class="finale">
+  <div class="wrap">
+    <span class="eyebrow rv">Q.E.D.</span>
+    <h2 class="rv">AI <i class="gtext">=</i><br>Buffalo.</h2>
+    <p class="rv">A word that can mean anything means nothing in particular, and two words that mean nothing in particular are the same word. We call everything AI. So AI is buffalo.</p>
+    <div class="row rv">
+      <a class="btn btn-gold" id="share" href="https://willardwonder.github.io/AI-Buffalo/#proof">Copy link to the proof</a>
+      <a class="btn btn-glass" href="https://en.wikipedia.org/wiki/Buffalo_buffalo_Buffalo_buffalo_buffalo_buffalo_Buffalo_buffalo" target="_blank" rel="noopener">Read the 1972 sentence</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="crest" href="#top"><svg aria-hidden="true" style="width:40px;height:40px"><use href="#crest"/></svg><span style="font-size:22px">Institute for Lexical Equivalence</span></a>
+    <div>
+      <p>This site is satire. The Buffalo sentence and its <a href="https://en.wikipedia.org/wiki/Buffalo_buffalo_Buffalo_buffalo_buffalo_buffalo_Buffalo_buffalo" target="_blank" rel="noopener">Wikipedia article</a> are real, and so is <i>Guy on a Buffalo</i> by The Possum Posse. The Institute, its studies, journals, authors, surveys, and data are invented.</p>
+      <p>3D bison by Kenney (Prototype Kit, CC0). Rendered with three.js (MIT).</p>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script type="module" src="game.js"></script>
+<script>
+(() => {
+const $ = (id) => document.getElementById(id);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const nav = $('nav'), game = $('game');
+const navLinks = [...document.querySelectorAll('.nav a.l')];
+new MutationObserver(() => nav.classList.toggle('hide', game.classList.contains('playing'))).observe(game, { attributes: true, attributeFilter: ['class'] });
+const secIO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) navLinks.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id)); }), { rootMargin: '-45% 0px -50% 0px' });
+document.querySelectorAll('section[id]').forEach(s => secIO.observe(s));
+$('navPlay').addEventListener('click', (e) => {
+  e.preventDefault();
+  const atTop = scrollY < 40;
+  window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  setTimeout(() => { const b = $('gPlay'); if (!b.disabled) b.click(); }, atTop || reduce ? 0 : 700);
+});
+$('gExitEnd')?.addEventListener('click', () => setTimeout(() => $('proof').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' }), 50));
+
+const rvIO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); rvIO.unobserve(e.target); } }), { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+document.querySelectorAll('.rv').forEach(el => rvIO.observe(el));
+
+document.querySelectorAll('.card').forEach(c => c.addEventListener('pointermove', e => {
+  const r = c.getBoundingClientRect(); c.style.setProperty('--mx', (e.clientX - r.left) + 'px'); c.style.setProperty('--my', (e.clientY - r.top) + 'px');
+}));
+
+const journals = ['Journal of Applied Bovine Linguistics', 'Proceedings of Ruminant Computation', 'Quarterly Journal of Hype Economics', 'Nature Reviews Lexicography', 'Review of Zoosemiotics', 'Journal of Plains Informatics', 'Annals of Semantic Saturation'];
+$('track').innerHTML = [...journals, ...journals].map(j => `<span>${j}</span>`).join('');
+
+const mani = $('mani');
+[...mani.childNodes].forEach(n => {
+  if (n.nodeType === 3) {
+    const frag = document.createDocumentFragment();
+    n.textContent.split(/(\s+)/).forEach(w => { if (!w) return; if (/^\s+$/.test(w)) frag.append(w); else { const s = document.createElement('span'); s.textContent = w; frag.append(s); } });
+    n.replaceWith(frag);
+  }
+});
+const maniWords = [...mani.querySelectorAll('span')];
+function lightUp() {
+  const r = mani.getBoundingClientRect(), vh = innerHeight;
+  const p = reduce ? 1 : Math.min(Math.max((vh * 0.8 - r.top) / (r.height + vh * 0.25), 0), 1);
+  const n = Math.round(p * maniWords.length);
+  maniWords.forEach((w, i) => w.classList.toggle('lit', i < n));
+}
+addEventListener('scroll', lightUp, { passive: true }); lightUp();
+
+const cIO = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return; cIO.unobserve(e.target);
+  const el = e.target, to = +el.dataset.to, suf = el.dataset.suf || '';
+  if (reduce || to === 0) { el.textContent = to.toLocaleString() + suf; return; }
+  const t0 = performance.now(), d = 1800;
+  (function f(t) { const k = Math.min((t - t0) / d, 1), v = Math.round(to * (1 - Math.pow(1 - k, 4))); el.textContent = v.toLocaleString() + suf; if (k < 1) requestAnimationFrame(f); })(t0);
+}), { threshold: 0.5 });
+document.querySelectorAll('[data-to]').forEach(el => cIO.observe(el));
+
+const W = [
+  { b:'Buffalo', a:'AI', p:'Bison',        r:'adj',  pos:'Adjective', d:{ buffalo:'Buffalo, adjective. From Buffalo, New York.', ai:'AI, adjective. From the AI industry, as in "AI-powered."', plain:'Begins the subject.' } },
+  { b:'buffalo', a:'ai', p:'of Buffalo',   r:'noun', pos:'Noun',      d:{ buffalo:'buffalo, noun. The animal, Bison bison.', ai:'ai, noun. A model, a product, a chatbot, or a toaster.', plain:'Where these bison come from.' } },
+  { b:'Buffalo', a:'AI', p:'that Buffalo', r:'adj',  pos:'Adjective', d:{ buffalo:'Buffalo, adjective. A second group of bison, also from Buffalo.', ai:'AI, adjective. A second product, also from the AI industry.', plain:'Opens the relative clause.' } },
+  { b:'buffalo', a:'ai', p:'bison',        r:'noun', pos:'Noun',      d:{ buffalo:'buffalo, noun. Those bison, the subject of the clause.', ai:'ai, noun. Those other AI products.', plain:'The bison doing the bullying.' } },
+  { b:'buffalo', a:'ai', p:'bully',        r:'verb', pos:'Verb',      d:{ buffalo:'buffalo, verb. To bully or intimidate.', ai:'ai, verb. To automate or rebrand: "we AI\'d onboarding."', plain:'The verb of the clause.' } },
+  { b:'buffalo', a:'ai', p:'bully',        r:'verb', pos:'Verb',      d:{ buffalo:'buffalo, verb. The main verb of the whole sentence.', ai:'ai, verb. The main verb. The automated now automate.', plain:'The main verb.' } },
+  { b:'Buffalo', a:'AI', p:'Buffalo',      r:'adj',  pos:'Adjective', d:{ buffalo:'Buffalo, adjective. A third group of bison from Buffalo.', ai:'AI, adjective. A third product from the AI industry.', plain:'Describes the object.' } },
+  { b:'buffalo', a:'ai', p:'bison',        r:'noun', pos:'Noun',      d:{ buffalo:'buffalo, noun. The object, the bison on the receiving end.', ai:'ai, noun. The object, the AI that gets AI\'d.', plain:'The bison on the receiving end.' } }
+];
+const gloss = {
+  buffalo: 'Bison from Buffalo, which other bison from Buffalo intimidate, themselves intimidate bison from Buffalo.',
+  ai: 'AI-branded products, which other AI-branded products automate, themselves automate AI-branded products.',
+  plain: 'Bison of Buffalo that Buffalo bison bully also bully Buffalo bison.'
+};
+let mode = 'buffalo', sel = -1;
+const wordsEl = $('words');
+W.forEach((w, i) => {
+  const b = document.createElement('button'); b.className = 'word'; b.dataset.r = w.r; b.setAttribute('aria-pressed', 'false');
+  b.innerHTML = `<b>${w.b}</b><small>${w.pos}</small>`;
+  b.onclick = () => { sel = sel === i ? -1 : i; renderWords(false); };
+  wordsEl.appendChild(b);
+});
+function renderWords(animate) {
+  [...wordsEl.children].forEach((b, i) => {
+    const t = b.querySelector('b'), next = mode === 'buffalo' ? W[i].b : mode === 'ai' ? W[i].a : W[i].p;
+    b.setAttribute('aria-pressed', String(i === sel));
+    if (t.dataset.v === next) return;
+    t.dataset.v = next;
+    if (!animate || reduce) { t.textContent = next; return; }
+    setTimeout(() => { t.classList.add('swap'); setTimeout(() => { t.textContent = next; t.classList.remove('swap'); }, 220); }, i * 55);
+  });
+  $('gloss').textContent = gloss[mode];
+  $('wordDetail').textContent = sel < 0 ? 'Choose any word above to see the job it is doing.' : `Word ${sel + 1} of 8. ${W[sel].d[mode]}`;
+}
+const seg = $('seg'), ind = $('segInd');
+function moveInd() { const b = seg.querySelector('[aria-pressed=true]'); ind.style.left = b.offsetLeft + 'px'; ind.style.width = b.offsetWidth + 'px'; }
+seg.querySelectorAll('button').forEach(b => b.onclick = () => {
+  mode = b.dataset.m; seg.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b))); moveInd(); renderWords(true);
+});
+renderWords(false); moveInd(); addEventListener('resize', moveInd); document.fonts?.ready.then(moveInd);
+
+const steps = [
+  { k:'Definition 1', t:'Lexical saturation', s:'A word is saturated when it can correctly fill every grammatical slot in a sentence.',
+    p:['"Buffalo" is the standard case. It works as a proper adjective, a noun, and a verb, and it can fill a valid sentence of any length by itself (Rapaport, 1972).'],
+    m:'Sat(w) ⟺ for every slot σ in {Adj, N, V}, w fits σ\nSat("buffalo") = true' },
+  { k:'Lemma 1', t:'"AI" is saturated', s:'In professional English, "AI" is now used as a proper adjective, a noun, and a verb.',
+    p:['Adjective: "an AI toothbrush." Noun: "the AI said no." Verb: "we need to AI this workflow." All three appear in a 2025 corpus of earnings calls (Thornbury and Okafor, 2025).', 'So "AI" passes the same test as "buffalo," and <i>AI ai AI ai ai ai AI ai</i> is grammatical.'],
+    m:'Sat("AI") = true' },
+  { k:'Lemma 2', t:'Universal labeling', s:'The label "AI" is applied to nearly every product, service, and idea.',
+    p:['Rice cookers, spreadsheets, toothbrushes, and if-statements are all sold as AI. A label applied to everything no longer separates one thing from another.', 'In information theory, a label applied to every item carries zero bits (Shannon, 1948).'],
+    m:'P(labeled "AI" | x) → 1 for all x\nI("AI") = −log₂ P → 0 bits' },
+  { k:'Lemma 3', t:'Buffalo is also empty', s:'Inside its sentence, "buffalo" has no fixed meaning. Its slot supplies the meaning.',
+    p:['Remove any single "buffalo" from the sentence and no one can say whether it was a city, an animal, or a verb. The word supplies nothing; its position supplies everything (Vandersloot, 2021).'],
+    m:'I("buffalo" | out of context) = 0 bits' },
+  { k:'Theorem', t:'Empty words are equal', s:'If two saturated words each carry zero information, either can replace the other without changing what any sentence means.',
+    p:['A swap changes a sentence only if the word carries information. Neither of these does, so every sentence survives the swap. That is the definition of interchangeable.', 'The Institute\'s corpus tests found no failures in 11,400 swaps.'],
+    m:'Sat(a) ∧ Sat(b) ∧ I(a) = I(b) = 0\n⟹ for every sentence S, S[a/b] ≡ S\n⟹ a ≡ b' },
+  { k:'Corollary', t:'AI = Buffalo', s:'Apply the theorem to the two words.',
+    p:['Lemmas 1 to 3 satisfy the theorem\'s conditions, so the words are equivalent. Every quarter, more things are called AI and the equivalence gets stronger.'],
+    m:'Sat("AI") ∧ Sat("buffalo") ∧ I = 0 for both\n∴ AI ≡ Buffalo', qed:true }
+];
+let si = 0; const stepsEl = $('steps');
+steps.forEach((st, i) => { const li = document.createElement('li'); li.innerHTML = `<button><span class="n">${i + 1}</span><span>${st.t}</span></button>`; li.firstChild.onclick = () => show(i); stepsEl.appendChild(li); });
+function show(i) {
+  si = i; const st = steps[i], body = $('sheetBody');
+  body.innerHTML = `<div class="kind">${st.k}</div><h3>${st.t}</h3><div class="stmt">${st.s}</div>${st.p.map(x => `<p>${x}</p>`).join('')}<div class="math">${st.m}</div>${st.qed ? '<div class="qed gtext" aria-label="Q.E.D.">∎</div>' : ''}`;
+  body.style.animation = 'none'; void body.offsetWidth; body.style.animation = '';
+  [...stepsEl.querySelectorAll('button')].forEach((b, j) => { b.classList.toggle('done', j < i); j === i ? b.setAttribute('aria-current', 'step') : b.removeAttribute('aria-current'); });
+  $('bar').style.width = ((i + 1) / steps.length * 100) + '%';
+  $('prev').style.visibility = i ? 'visible' : 'hidden';
+  $('next').textContent = i === steps.length - 1 ? 'Start over' : 'Next step';
+}
+$('next').onclick = () => show(si === steps.length - 1 ? 0 : si + 1);
+$('prev').onclick = () => show(Math.max(0, si - 1));
+show(0);
+
+const subIn = $('subIn');
+function substitute() {
+  const t = subIn.value; let n = 0;
+  const esc = t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  const out = esc.replace(/\b(artificial intelligence|A\.I\.|AI|ai)(s)?\b/gi, (m, w) => { n++; return `<mark>${/^[A-Z]/.test(w) ? 'Buffalo' : 'buffalo'}</mark>`; });
+  $('subOut').innerHTML = t.trim() ? out : '<span style="color:var(--dim)">Type a sentence above.</span>';
+  $('sri').textContent = t.trim() ? (n ? `100%, ${n} swap${n === 1 ? '' : 's'}` : '100%') : '—';
+  $('sriBar').style.width = t.trim() ? '100%' : '0';
+}
+subIn.addEventListener('input', substitute); substitute();
+
+const ex = ['A toaster', 'Excel', 'My thermostat', 'A spoon', 'The moon', 'An if-statement', 'My dog', 'A buffalo'];
+const chips = $('chips'), aiIn = $('aiIn');
+ex.forEach(e => { const c = document.createElement('button'); c.textContent = e; c.onclick = () => { aiIn.value = e; classify(); }; chips.appendChild(c); });
+const hash = s => { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; };
+function classify() {
+  const q = aiIn.value.trim(); if (!q) { aiIn.focus(); return; }
+  const h = hash(q.toLowerCase()), conf = (97 + (h % 300) / 100).toFixed(2);
+  const isBuf = /buffalo|bison/i.test(q);
+  const when = ['Already sold as AI', 'Within six months', 'By the next funding round', 'By the next earnings call'][h % 4];
+  const safe = q.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  $('vTitle').innerHTML = `${safe} is <em class="gtext">AI.</em>`;
+  $('vSub').textContent = isBuf ? 'The base case. The equation runs both ways.' : 'By the corollary, it is also buffalo.';
+  $('vList').innerHTML = `<dt>Confidence</dt><dd>${conf}%</dd><dt>AI branding</dt><dd>${when}</dd><dt>Buffalo equivalence</dt><dd>1.00</dd><dt>Distinguishable from AI</dt><dd>No</dd>`;
+  const v = $('verdict'); v.hidden = true; void v.offsetWidth; v.hidden = false;
+}
+$('aiGo').onclick = classify;
+aiIn.addEventListener('keydown', e => { if (e.key === 'Enter') classify(); });
+
+const conv = $('conv');
+function upd() {
+  const p = +conv.value / 100; conv.style.setProperty('--p', conv.value + '%');
+  $('cShare').textContent = Math.round(p * 100) + '%';
+  $('cBits').textContent = p === 0 ? '∞' : (p >= 1 ? 0 : -Math.log2(p)).toFixed(2);
+  $('cBuf').textContent = Math.pow(p, 1.6).toFixed(2);
+  const msgs = [[0, '"AI" still means something specific. Enjoy it while it lasts.'], [.3, 'Marketing departments have noticed.'], [.6, 'Your refrigerator now has a chatbot.'], [.85, 'The word is nearly empty. Buffalo is close.'], [.99, 'Full convergence. AI is buffalo.']];
+  $('cMsg').textContent = msgs.filter(m => p >= m[0]).pop()[1];
+}
+conv.addEventListener('input', upd); upd();
+
+const yrs = [2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026];
+const A = [100,118,141,166,189,214,248,331,712,1180,1690,2240];
+const B = [100,121,139,170,186,219,244,340,698,1205,1661,2275];
+const cv = $('chart'), ctx = cv.getContext('2d'), tip = $('tip');
+let prog = 0, pts = [], hover = -1;
+function draw() {
+  const dpr = devicePixelRatio || 1, w = cv.clientWidth, h = cv.clientHeight;
+  if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
+  const pad = { l: 50, r: 16, t: 16, b: 34 }, lo = 2, hi = Math.log10(2600);
+  const X = i => pad.l + (w - pad.l - pad.r) * i / (yrs.length - 1);
+  const Y = v => pad.t + (h - pad.t - pad.b) * (1 - (Math.log10(v) - lo) / (hi - lo));
+  ctx.font = '400 12px Geist, sans-serif'; ctx.fillStyle = '#6b7080'; ctx.strokeStyle = 'rgba(243,238,228,.07)'; ctx.lineWidth = 1;
+  [100, 200, 500, 1000, 2000].forEach(v => { ctx.beginPath(); ctx.moveTo(pad.l, Y(v)); ctx.lineTo(w - pad.r, Y(v)); ctx.stroke(); ctx.fillText(v.toLocaleString(), 2, Y(v) + 4); });
+  yrs.forEach((y, i) => { if (w < 640 && i % 2) return; ctx.fillText(y, X(i) - 14, h - 10); });
+  const cx = X(yrs.length - 1);
+  ctx.setLineDash([4, 6]); ctx.strokeStyle = 'rgba(216,184,120,.5)'; ctx.beginPath(); ctx.moveTo(cx, pad.t); ctx.lineTo(cx, h - pad.b); ctx.stroke(); ctx.setLineDash([]);
+  const n = prog * (yrs.length - 1);
+  const path = (s) => { ctx.beginPath(); let lx = 0, ly = 0; for (let i = 0; i <= Math.floor(n); i++) { lx = X(i); ly = Y(s[i]); i ? ctx.lineTo(lx, ly) : ctx.moveTo(lx, ly); } const i0 = Math.floor(n), f = n - i0; if (i0 < yrs.length - 1 && f > 0) { lx = X(i0) + (X(i0 + 1) - X(i0)) * f; ly = Y(s[i0]) + (Y(s[i0 + 1]) - Y(s[i0])) * f; ctx.lineTo(lx, ly); } return [lx, ly]; };
+  const grad = ctx.createLinearGradient(0, pad.t, 0, h - pad.b); grad.addColorStop(0, 'rgba(216,184,120,.22)'); grad.addColorStop(1, 'rgba(216,184,120,0)');
+  const [ex2] = path(A); ctx.lineTo(ex2, h - pad.b); ctx.lineTo(pad.l, h - pad.b); ctx.closePath(); ctx.fillStyle = grad; ctx.fill();
+  const series = [[A, '#d8b878'], [B, '#e08a5a']];
+  series.forEach(([s, c]) => { ctx.save(); ctx.shadowColor = c; ctx.shadowBlur = 16; ctx.strokeStyle = c; ctx.lineWidth = 2.5; ctx.lineJoin = 'round'; const [lx, ly] = path(s); ctx.stroke(); ctx.restore(); if (hover < 0) { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(lx, ly, 4, 0, 7); ctx.fill(); } });
+  pts = yrs.map((_, i) => ({ x: X(i), a: Y(A[i]), b: Y(B[i]) }));
+  if (hover >= 0) {
+    const p = pts[hover];
+    ctx.strokeStyle = 'rgba(243,238,228,.2)'; ctx.beginPath(); ctx.moveTo(p.x, pad.t); ctx.lineTo(p.x, h - pad.b); ctx.stroke();
+    series.forEach(([, c], k) => { const yy = k ? p.b : p.a; ctx.fillStyle = '#07090f'; ctx.beginPath(); ctx.arc(p.x, yy, 7, 0, 7); ctx.fill(); ctx.fillStyle = c; ctx.beginPath(); ctx.arc(p.x, yy, 4.5, 0, 7); ctx.fill(); });
+  }
+}
+new IntersectionObserver((e, o) => { if (e[0].isIntersecting) { o.disconnect(); if (reduce) { prog = 1; draw(); return; } (function a() { prog = Math.min(prog + 0.012, 1); draw(); if (prog < 1) requestAnimationFrame(a); })(); } }, { threshold: 0.35 }).observe(cv);
+addEventListener('resize', draw); draw();
+cv.addEventListener('pointermove', e => {
+  if (prog < 1) return;
+  const r = cv.getBoundingClientRect(), mx = e.clientX - r.left;
+  let best = 0; pts.forEach((p, i) => { if (Math.abs(p.x - mx) < Math.abs(pts[best].x - mx)) best = i; });
+  hover = best; draw();
+  const p = pts[best];
+  tip.innerHTML = `<b>${yrs[best]}</b>AI ${A[best].toLocaleString()} &nbsp;/&nbsp; Buffalo ${B[best].toLocaleString()}`;
+  tip.style.left = Math.max(cv.offsetLeft, Math.min(p.x + cv.offsetLeft + 14, cv.offsetLeft + r.width - 220)) + 'px';
+  tip.style.top = (Math.min(p.a, p.b) + cv.offsetTop - 70) + 'px'; tip.style.opacity = 1;
+});
+cv.addEventListener('pointerleave', () => { hover = -1; tip.style.opacity = 0; draw(); });
+
+const papers = [
+  { j:'Journal of Applied Bovine Linguistics', y:2025, t:'Lexical saturation and the collapse of referential specificity: "AI" as a post-semantic token', a:'H. Thornbury and C. Okafor', c:412, f:'Linguistics',
+    ab:'We analyze 2.3 million earnings-call transcripts from 2019 to 2025 and find "AI" used as a proper adjective, a common noun, and a transitive verb, often in one sentence. By the saturation criterion first applied to "buffalo," "AI" reached saturation in the third quarter of 2023. Replacing "AI" with "buffalo" produced no measurable loss of meaning (n = 11,400; κ = 0.98).', kw:'saturation, polysemy, earnings calls' },
+  { j:'Proceedings of Ruminant Computation', y:2024, t:'Attention is all you need to buffalo: transformer architectures as herd behavior', a:'M. Vandersloot, P. Ruiz-Hagen, and T. Ngata', c:1288, f:'Computation', award:true,
+    ab:'In self-attention, each token weighs every other token before it moves. A bison herd does the same. We formalize the stampede gradient and show that large language models and herds of Bison bison solve the same optimization problem, a result we call the Herd–Head Duality.', kw:'transformers, attention, herd dynamics' },
+  { j:'Review of Zoosemiotics', y:2021, t:'On the informational vacuity of the isolated buffalo', a:'M. Vandersloot', c:367, f:'Linguistics',
+    ab:'Remove one "buffalo" from the Rapaport sentence and native speakers cannot name its part of speech (33.6% accuracy, which is chance). The word carries no information outside its slot. We predict other high-frequency words will empty out the same way.', kw:'zero-information words, syntax' },
+  { j:'Quarterly Journal of Hype Economics', y:2025, t:'Everything is AI: label inflation and the zero-bit equilibrium', a:'D. Abernathy-Kwon and S. Lindqvist', c:903, f:'Economics',
+    ab:'We model "AI" as a currency of attention that has inflated. As the share of products labeled AI approaches one, the label\'s power to distinguish approaches zero. At that point any saturated word can replace it at no cost, and "buffalo" is the cheapest substitute available.', kw:'label inflation, signaling' },
+  { j:'Nature Reviews Lexicography', y:2026, t:'A systematic review of AI–Buffalo equivalence: 47 studies, one conclusion', a:'R. Featherstonehaugh and colleagues', c:221, f:'Review',
+    ab:'We pooled 47 studies across 9 languages and 2 species. The combined estimate of AI–Buffalo interchangeability is 0.996 (95% CI 0.991 to 0.999). We found no publication bias, because no study reached a different conclusion. We recommend dictionaries merge the entries by 2028.', kw:'meta-analysis, lexicography' },
+  { j:'Journal of Plains Informatics', y:2023, t:'Buffalo-powered: a field study of the AI rebrand in the American Midwest', a:'L. Two Rivers and K. Haugen', c:156, f:'Economics',
+    ab:'We interviewed 212 owners of small businesses that added "AI" to a product name. Asked what changed about the product, 88% said "the name." Replacing the name with "Buffalo" in later surveys did not change purchase intent (p = 0.71).', kw:'rebranding, consumer behavior' },
+  { j:'Proceedings of Ruminant Computation', y:2026, t:'BUFFALO-8: an eight-token benchmark every frontier model passes and none understands', a:'P. Ruiz-Hagen and A. Ostrowski', c:540, f:'Computation',
+    ab:'BUFFALO-8 has one item: parse the Rapaport sentence. Every model we tested parsed it. When we replaced each "buffalo" with "AI," every model parsed that too, and called the result an accurate description of the industry.', kw:'benchmarks, evaluation' }
+];
+const fields = ['All', ...new Set(papers.map(p => p.f))]; let ff = 'All';
+const filEl = $('filters');
+fields.forEach(f => { const b = document.createElement('button'); b.textContent = f; b.setAttribute('aria-pressed', String(f === 'All')); b.onclick = () => { ff = f; [...filEl.children].forEach(x => x.setAttribute('aria-pressed', String(x === b))); renderPapers(); }; filEl.appendChild(b); });
+function renderPapers() {
+  const el = $('papers'); el.innerHTML = '';
+  papers.filter(p => ff === 'All' || p.f === ff).forEach(p => {
+    const d = document.createElement('article'); d.className = 'paper';
+    d.innerHTML = `<div class="yr">${p.y}</div>
+      <div><h4>${p.t}${p.award ? '<span class="award">Best paper</span>' : ''}</h4>
+      <div class="by">${p.a}, <i>${p.j}</i></div>
+      <div class="abs"><div><p>${p.ab}</p><div class="kw">Keywords: ${p.kw}</div></div></div></div>
+      <div><div class="acts"><button class="ab" aria-expanded="false">Abstract</button><button class="bib">Cite</button></div><div class="cites">Cited by ${p.c.toLocaleString()}</div></div>`;
+    const ab = d.querySelector('.ab');
+    ab.onclick = () => { const o = d.classList.toggle('open'); ab.textContent = o ? 'Close' : 'Abstract'; ab.setAttribute('aria-expanded', String(o)); };
+    d.querySelector('.bib').onclick = () => copy(`${p.a} (${p.y}). ${p.t}. ${p.j}. [Satire: not a real publication.]`, 'Citation copied');
+    el.appendChild(d);
+  });
+}
+renderPapers();
+
+const objs = [
+  ['"Buffalo" is an animal. AI is software.', 'By the definition marketing uses today, a well-trained buffalo would qualify as AI. In any case the proof concerns the words, not the things. Lemma 2 shows the word "AI" no longer reliably points at software.'],
+  ['No one says "AI ai AI ai ai ai AI ai" with a straight face.', 'No one says the original with a straight face either, and it has been grammatical since 1972. How comfortable a sentence feels is not a test of whether it is correct.'],
+  ['Some things still aren\'t called AI.', 'The Institute hasn\'t found one. Try the classifier above. It hasn\'t found an exception yet.'],
+  ['The correlation looks too good.', 'Interchangeable words should correlate this strongly. A weaker result would count against the theorem.'],
+  ['This is a joke.', 'So is "AI" on a rice cooker, and that one has a price tag.'],
+  ['Doesn\'t this make every word equal to every other word?', 'No. Only saturated, zero-information words qualify, and the set has two members. "Synergy," "platform," and "solution" are under review.']
+];
+$('obj').innerHTML = objs.map(([q, a]) => `<details><summary>${q}<span class="pm" aria-hidden="true"></span></summary><p>${a}</p></details>`).join('');
+
+const refs = [
+  `Rapaport, W. J. (1972). The sentence "Buffalo buffalo Buffalo buffalo buffalo buffalo Buffalo buffalo." See <a href="https://en.wikipedia.org/wiki/Buffalo_buffalo_Buffalo_buffalo_buffalo_buffalo_Buffalo_buffalo" target="_blank" rel="noopener">Wikipedia</a>.<span class="tag real">Real</span>`,
+  `Shannon, C. E. (1948). A mathematical theory of communication. <i>Bell System Technical Journal</i>, 27(3), 379–423.<span class="tag real">Real</span>`,
+  `The Possum Posse. <i>Guy on a Buffalo</i>, episodes 1–4. Adapted from <i>Buffalo Rider</i> (1978).<span class="tag real">Real</span>`,
+  ...papers.map(p => `${p.a} (${p.y}). ${p.t}. <i>${p.j}</i>.<span class="tag fict">Fictional</span>`),
+  `Institute for Lexical Equivalence (2025). <i>Bisonometric Panel Survey, waves 1–11</i>. Codebook v3.2.<span class="tag fict">Fictional</span>`
+];
+$('refs').innerHTML = refs.map(r => `<li>${r}</li>`).join('');
+
+function copy(t, msg) {
+  const done = () => toast(msg);
+  const fallback = () => { const ta = document.createElement('textarea'); ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} ta.remove(); done(); };
+  if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(t).then(done, fallback); else fallback();
+}
+function toast(m) { const t = $('toast'); t.textContent = m; t.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 2400); }
+$('share').addEventListener('click', (e) => {
+  e.preventDefault();
+  const live = /^https?:/.test(location.protocol) && !/localhost|127\.0\.0\.1/.test(location.host);
+  const url = live ? location.origin + location.pathname + '#proof' : $('share').href;
+  copy(url, 'Link copied: ' + url.replace(/^https?:\/\//, ''));
+});
+})();
+</script>
+</body>
+</html>
