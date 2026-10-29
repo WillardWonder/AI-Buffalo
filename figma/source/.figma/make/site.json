@@ -1,0 +1,11 @@
+{
+  "title": "AI = Buffalo (Figma Make version)",
+  "description": "Figma Make's build of the AI = Buffalo brief, hosted for side-by-side comparison with Claude's version.",
+  "language": "en",
+  "icons": {
+    "icon": "favicon.svg"
+  },
+  "customScripts": {
+    "bodyEnd": "<a href=\"../\" id=\"ile-compare\" style=\"position:fixed;left:18px;bottom:18px;z-index:2147483646;display:inline-flex;align-items:center;gap:8px;padding:11px 16px;border-radius:999px;background:rgba(9,11,17,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(216,184,120,.35);color:#f3eee4;font:600 12px/1 'DM Sans',system-ui,sans-serif;text-decoration:none;box-shadow:0 12px 30px rgba(0,0,0,.35)\">Figma Make version &middot; <span style=\"color:#d8b878\">Compare with Claude's &rarr;</span></a>"
+  }
+}
